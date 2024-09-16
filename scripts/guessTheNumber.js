@@ -3,25 +3,31 @@ import inquirer from "inquirer";
 const randomNumber = Math.floor(Math.random() * 100) + 1;
 let attempts = 0;
 
-console.log(randomNumber);
-
 const getUserGuess = () => {
   inquirer
     .prompt([
       {
         type: "input",
         name: "number",
-        message: "Guess the number!",
+        message: "Guess the number between 1 and 100! (Type 'exit' to quit)",
         validate(value) {
-          const valid = !isNaN(parseInt(value));
-          return valid || "Please enter a valid number!";
+          if (value.toLowerCase() === 'exit') {
+            return true;
+          }
+          const valid = !isNaN(parseInt(value)) && parseInt(value) >= 1 && parseInt(value) <= 100;
+          return valid || "Please enter a valid number between 1 and 100!";
         },
-        filter: Number,
+        filter: (value) => (value.toLowerCase() === 'exit' ? 'exit' : Number(value)),
       },
     ])
     .then((answers) => {
+      if (answers.number === 'exit') {
+        console.log("Goodbye! Thanks for playing.");
+        return;
+      }
+
       attempts++;
-      const userGuess = parseInt(answers.number);
+      const userGuess = answers.number;
 
       if (
         (userGuess >= randomNumber - 5 && userGuess <= randomNumber - 1) ||
@@ -30,13 +36,13 @@ const getUserGuess = () => {
         console.log(`Attempt #${attempts}`);
         console.log("Warm");
         getUserGuess();
-      } else if (userGuess > randomNumber) {
-        console.log(`Attempt #${attempts}`);
-        console.log("High");
-        getUserGuess();
       } else if (userGuess > randomNumber + 10) {
         console.log(`Attempt #${attempts}`);
         console.log("Too high");
+        getUserGuess();
+      } else if (userGuess > randomNumber) {
+        console.log(`Attempt #${attempts}`);
+        console.log("High");
         getUserGuess();
       } else if (userGuess < randomNumber - 10) {
         console.log(`Attempt #${attempts}`);
