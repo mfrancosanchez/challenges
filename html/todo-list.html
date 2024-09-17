@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        html {
+            text-align: center;
+        }
+
+        .completed {
+            text-decoration: line-through;
+        }
+
+        li {
+            list-style: none;
+            margin-right: 10px;
+        }
+
+        button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Todo List</h1>
+    <input type="text" id="todoInput" placeholder="Add new todo">
+    <ul id="todoList"> </ul>
+    <button id="addTodo">Add Todo</button>
+
+
+    <script>
+        document.querySelector('body').style.backgroundColor = 'lightblue';
+        document.getElementById('addTodo').addEventListener('click', function () {
+            const input = document.getElementById('todoInput');
+            const todoText = input.value.trim();
+
+            if (todoText) {
+                const listItem = document.createElement('li');
+                listItem.textContent = todoText;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', function () {
+                    listItem.remove();
+                });
+
+                listItem.appendChild(deleteButton);
+                document.getElementById('todoList').appendChild(listItem);
+                input.value = '';
+
+                listItem.addEventListener('click', function () {
+                    listItem.classList.toggle('completed');
+                });
+            }
+        })
+    </script>
+</body>
+
+</html>
